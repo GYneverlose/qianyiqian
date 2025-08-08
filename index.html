@@ -1,149 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>签一签 · 希望版</title>
-  <style>
-    body {
-      font-family: "Noto Serif SC", serif;
-      background: url('https://cdn.jsdelivr.net/gh/wgpsec/static-host/images/xuan-paper-bg.jpg') repeat;
-      background-size: cover;
-      text-align: center;
-      padding: 40px;
-      color: #333;
-    }
-    .card {
-      padding: 20px;
-      margin: 20px auto;
-      background: rgba(255,255,255,0.85);
-      border: 2px solid #999;
-      border-radius: 12px;
-      width: 80%;
-      box-shadow: 0 0 10px #ccc;
-    }
-    button {
-      font-size: 18px;
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      background: #3f3f3f;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    select {
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-    .golden-glow {
-      animation: glow 2s infinite alternate;
-      color: goldenrod;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 5px gold; }
-      to { text-shadow: 0 0 20px goldenrod; }
-    }
-    .link-button {
-      background: darkred;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>签一签 v0.6</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>签一签 · 希望版</h1>
-  <p>请选择签池：</p>
-  <select id="poolSelect">
-    <option value="general">综合</option>
-    <option value="wealth">财运</option>
-    <option value="love">感情</option>
-    <option value="career">事业</option>
-  </select>
-  <div class="card" id="output">请静心三息，默念所求之事，再开始摇签。</div>
-  <button onclick="ritual()">🧘 摇签前的仪式</button>
-  <button onclick="shake()">🎴 摇签</button>
-  <button onclick="draw()">✨ 抽字卡</button>
-  <button onclick="showLibrary()" class="link-button">🏯 藏经阁</button>
-  <div id="library" style="display:none;" class="card"></div>
-  <audio id="bell" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6d7616a962.mp3?filename=soft-bell-125039.mp3"></audio>
-  <audio id="drawSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d9b3e46a23.mp3?filename=game-reward-1-140081.mp3"></audio>
-
-  <script>
-    let fortunePoints = 0;
-    let characters = ["福", "禄", "寿", "喜", "安", "宁", "祥", "顺", "康", "吉"];
-    let wordLibrary = JSON.parse(localStorage.getItem("wordLibrary") || "[]");
-
-    const poems = {
-      general: [
-        { level: "上上签", poem: "风顺帆稳海天阔", advice: "万事称意，福星高照。" },
-        { level: "上签", poem: "花开正好迎春来", advice: "运势渐旺，好事将至。" },
-        { level: "中签", poem: "水过无痕静自安", advice: "平安是福，稳中求进。" }
-      ],
-      wealth: [
-        { level: "上上签", poem: "财源滚滚盈满屋", advice: "财富之门为你敞开。" },
-        { level: "上签", poem: "一分耕耘一分收", advice: "努力就会见成果。" },
-        { level: "中签", poem: "不进不退守为安", advice: "平稳中求发展。" }
-      ],
-      love: [
-        { level: "上上签", poem: "良缘天定喜盈门", advice: "感情顺利，桃花正旺。" },
-        { level: "上签", poem: "月老牵线情自来", advice: "真心换真情。" },
-        { level: "中签", poem: "心静情定缘自合", advice: "内心安稳才迎佳人。" }
-      ],
-      career: [
-        { level: "上上签", poem: "鹏程万里仕途顺", advice: "事业腾飞正当时。" },
-        { level: "上签", poem: "磨刀不误砍柴功", advice: "准备充足再出发。" },
-        { level: "中签", poem: "凡事慢行定有成", advice: "稳扎稳打，未来可期。" }
-      ]
-    };
-
-    function ritual() {
-      document.getElementById('output').innerHTML =
-        `🧘 请闭上眼睛，默念你所求之事...<br>准备好后再点「摇签」。`;
-      document.getElementById("bell").play();
-    }
-
-    function shake() {
-      let pool = document.getElementById("poolSelect").value;
-      let list = poems[pool];
-      let result = list[Math.floor(Math.random() * list.length)];
-      let luckMap = { "中签": 0, "上签": 1, "上上签": 2 };
-      fortunePoints += luckMap[result.level];
-      document.getElementById("output").innerHTML =
-        `<strong>${result.level}</strong>：<em>${result.poem}</em><br><br>` +
-        `📜 签意：${result.advice}<br>` +
-        `🎯 命运值变动：+${luckMap[result.level]}<br>` +
-        `📊 当前命运值：${fortunePoints}`;
-      document.getElementById("bell").play();
-    }
-
-    function draw() {
-      if (fortunePoints < 5) {
-        alert("命运值不足，至少需要 5 点才能抽字卡。");
-        return;
-      }
-      fortunePoints -= 5;
-      const c = characters[Math.floor(Math.random() * characters.length)];
-      wordLibrary.push(c);
-      localStorage.setItem("wordLibrary", JSON.stringify(wordLibrary));
-      document.getElementById("output").innerHTML =
-        `✨ 你抽到了字卡：「<span class="golden-glow">${c}</span>」<br>` +
-        `📊 当前命运值：${fortunePoints}`;
-      document.getElementById("drawSound").play();
-    }
-
-    function showLibrary() {
-      let wordMap = {};
-      wordLibrary.forEach(c => {
-        wordMap[c] = (wordMap[c] || 0) + 1;
-      });
-      let html = `<h3>🏯 藏经阁 · 收集进度</h3>`;
-      html += `<p>你已收集以下字卡：</p><ul>`;
-      for (const ch in wordMap) {
-        html += `<li>${ch} × ${wordMap[ch]}</li>`;
-      }
-      html += `</ul><p>📊 当前命运值：${fortunePoints}</p>`;
-      document.getElementById("library").style.display = "block";
-      document.getElementById("library").innerHTML = html;
-    }
-  </script>
+    <div class="background">
+        <h1>签一签</h1>
+        <div id="fortune-area">
+            <button onclick="startRitual()">摇签</button>
+            <p id="ritual-hint">请闭目静心，默念所求之事…</p>
+            <div id="result"></div>
+            <p id="luck">命运值：<span id="luck-value">0</span></p>
+        </div>
+        <div id="card-area">
+            <button onclick="drawCard()">抽字卡</button>
+            <div id="cards"></div>
+        </div>
+        <div id="藏经阁">
+            <h2>藏经阁</h2>
+            <div id="collected-words"></div>
+            <div id="成语-display"></div>
+            <div id="golden-rice">金稻：<span id="rice-count">0</span></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
 </body>
 </html>
