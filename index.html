@@ -1,31 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>签一签 v0.6</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>签一签 · 希望版</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="background">
-        <h1>签一签</h1>
-        <div id="fortune-area">
-            <button onclick="startRitual()">摇签</button>
-            <p id="ritual-hint">请闭目静心，默念所求之事…</p>
-            <div id="result"></div>
-            <p id="luck">命运值：<span id="luck-value">0</span></p>
-        </div>
-        <div id="card-area">
-            <button onclick="drawCard()">抽字卡</button>
-            <div id="cards"></div>
-        </div>
-        <div id="藏经阁">
-            <h2>藏经阁</h2>
-            <div id="collected-words"></div>
-            <div id="成语-display"></div>
-            <div id="golden-rice">金稻：<span id="rice-count">0</span></div>
-        </div>
-    </div>
-    <script src="main.js"></script>
+  <div id="app"></div>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
