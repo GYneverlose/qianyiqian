@@ -1,59 +1,65 @@
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>签一签 · MVP</title>
-<style>
-    body { font-family: Arial, sans-serif; background-color: #faf8f3; margin: 0; padding: 0; }
-    header { background-color: #ffda8a; padding: 10px; text-align: center; font-weight: bold; }
-    .container { padding: 15px; max-width: 600px; margin: auto; }
-    button { background-color: #ffb347; border: none; padding: 10px 20px; margin: 5px; font-size: 16px; border-radius: 5px; cursor: pointer; }
-    button:hover { background-color: #ff9800; }
-    .result { margin-top: 20px; padding: 10px; border: 1px solid #ddd; background-color: #fff; border-radius: 5px; }
-    .debug-log { position: fixed; bottom: 5px; right: 5px; background: rgba(0,0,0,0.7); color: white; font-size: 12px; padding: 5px; border-radius: 5px; max-width: 200px; }
-</style>
+    <meta charset="UTF-8">
+    <title>签一签 v0.2</title>
+    <style>
+        body {
+            font-family: "Noto Serif SC", serif;
+            background: url('https://cdn.jsdelivr.net/gh/wgpsec/static-host/images/xuan-paper-bg.jpg') repeat;
+            color: #222;
+            text-align: center;
+            padding: 40px;
+        }
+        .card {
+            padding: 20px;
+            margin: 20px auto;
+            background: rgba(255,255,255,0.8);
+            border: 2px solid #ccc;
+            border-radius: 12px;
+            width: 80%;
+            box-shadow: 0 0 10px gold;
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 5px gold; }
+            to { box-shadow: 0 0 20px goldenrod; }
+        }
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background: #333;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<header>签文非注定，仅供参考，命运未定，信念自身。</header>
-<div class="container">
-    <h2>摇签</h2>
-    <p>默想所求后点击按钮摇签</p>
-    <button id="drawBtn">摇签</button>
-    <div id="result" class="result"></div>
-</div>
-<div class="debug-log" id="debugLog">调试日志：</div>
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-    const log = (msg) => {
-        const logBox = document.getElementById('debugLog');
-        logBox.innerHTML += "<br>" + msg;
-    };
-    log("页面已加载");
-    
-    const fortunes = [
-        { poem: "春风得意马蹄疾", advice: "今天状态不错，适合推进进度", value: 3 },
-        { poem: "风雨不改前行路", advice: "保持节奏，别被小事绊住", value: 1 },
-        { poem: "云遮月色难见光", advice: "耐心等待时机，不必急", value: 0 },
-        { poem: "秋水共长天一色", advice: "静下心，先整理思绪", value: 2 },
-        { poem: "落花流水春去也", advice: "接受变化，顺势而为", value: -1 }
-    ];
-
-    document.getElementById('drawBtn').addEventListener('click', function(){
-        log("摇签按钮被点击");
-        const pick = fortunes[Math.floor(Math.random() * fortunes.length)];
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `
-            <h3>签诗：</h3>
-            <p>${pick.poem}</p>
-            <h3>建议：</h3>
-            <p>${pick.advice}</p>
-            <p>命运值变化：${pick.value >= 0 ? '+' : ''}${pick.value}</p>
-            <button onclick="alert('你选择认了')">我认了</button>
-            <button onclick="alert('需要订阅才能重签')">我重签</button>
-        `;
-    });
-});
-</script>
+    <h1>签一签 v0.2</h1>
+    <div class="card" id="output">欢迎来到命运之签</div>
+    <button onclick="shake()">摇签</button>
+    <button onclick="draw()">抽字</button>
+    <script>
+        let fortunePoints = 0;
+        let characters = ["福", "禄", "寿", "喜", "安", "宁"];
+        function shake() {
+            const delta = Math.floor(Math.random() * 11) - 5;
+            fortunePoints += delta;
+            document.getElementById('output').innerText = `你今日命运波动：${delta >= 0 ? "+" : ""}${delta}，当前命运值：${fortunePoints}`;
+        }
+        function draw() {
+            if (fortunePoints < 5) {
+                alert("命运值不足，无法抽卡。");
+                return;
+            }
+            fortunePoints -= 5;
+            const c = characters[Math.floor(Math.random() * characters.length)];
+            document.getElementById('output').innerText = `你抽到了字卡：「${c}」 当前命运值：${fortunePoints}`;
+        }
+    </script>
 </body>
 </html>
