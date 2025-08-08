@@ -3,7 +3,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>签一签 v0.2</title>
+    <title>签一签 v0.3</title>
     <style>
         body {
             font-family: "Noto Serif SC", serif;
@@ -20,36 +20,56 @@
             border-radius: 12px;
             width: 80%;
             box-shadow: 0 0 10px gold;
-            animation: glow 2s infinite alternate;
-        }
-        @keyframes glow {
-            from { box-shadow: 0 0 5px gold; }
-            to { box-shadow: 0 0 20px goldenrod; }
         }
         button {
             font-size: 18px;
             padding: 10px 20px;
             margin: 10px;
             border: none;
-            background: #333;
+            background: #444;
             color: white;
             border-radius: 5px;
             cursor: pointer;
         }
+        .golden-glow {
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 5px gold; }
+            to { box-shadow: 0 0 20px goldenrod; }
+        }
     </style>
 </head>
 <body>
-    <h1>签一签 v0.2</h1>
-    <div class="card" id="output">欢迎来到命运之签</div>
+    <h1>签一签 v0.3</h1>
+    <div class="card" id="output">今日尚未摇签，福至心灵的一签等待你唤醒。</div>
     <button onclick="shake()">摇签</button>
     <button onclick="draw()">抽字</button>
+
     <script>
         let fortunePoints = 0;
+        let signedToday = false;
         let characters = ["福", "禄", "寿", "喜", "安", "宁"];
+        let poems = [
+            { level: "上签", poem: "云开月明照乾坤", advice: "今日适合展开新计划，光明即将照进来。", luck: +5 },
+            { level: "中签", poem: "风来疏竹动无声", advice: "事情有进展，但仍需静观其变。", luck: +2 },
+            { level: "下签", poem: "舟行浅滩多回折", advice: "路途有阻，莫急进，缓缓为宜。", luck: -2 },
+            { level: "下下签", poem: "落花流水两无情", advice: "情绪低落之日，宜静养，忌争执。", luck: -5 },
+            { level: "上上签", poem: "一箭双雕好彩头", advice: "好运连连，做事易得其成。", luck: +8 }
+        ];
         function shake() {
-            const delta = Math.floor(Math.random() * 11) - 5;
-            fortunePoints += delta;
-            document.getElementById('output').innerText = `你今日命运波动：${delta >= 0 ? "+" : ""}${delta}，当前命运值：${fortunePoints}`;
+            if (signedToday) {
+                document.getElementById('output').innerText = "你今天已经摇过签啦，明日再来。";
+                return;
+            }
+            signedToday = true;
+            let result = poems[Math.floor(Math.random() * poems.length)];
+            fortunePoints += result.luck;
+            document.getElementById('output').innerHTML =
+                `<strong>${result.level}</strong>：<em>${result.poem}</em><br><br>` +
+                `📜 签意：${result.advice}<br>` +
+                `🎯 命运值变动：${result.luck >= 0 ? "+" : ""}${result.luck}<br>` +
+                `📊 当前命运值：${fortunePoints}`;
         }
         function draw() {
             if (fortunePoints < 5) {
@@ -58,7 +78,9 @@
             }
             fortunePoints -= 5;
             const c = characters[Math.floor(Math.random() * characters.length)];
-            document.getElementById('output').innerText = `你抽到了字卡：「${c}」 当前命运值：${fortunePoints}`;
+            document.getElementById('output').innerHTML =
+                `✨ 你抽到了字卡：「<span class="golden-glow">${c}</span>」<br>` +
+                `📊 当前命运值：${fortunePoints}`;
         }
     </script>
 </body>
