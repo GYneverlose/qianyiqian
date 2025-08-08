@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>签一签 · MVP</title>
+<style>
+    body { font-family: Arial, sans-serif; background-color: #faf8f3; margin: 0; padding: 0; }
+    header { background-color: #ffda8a; padding: 10px; text-align: center; font-weight: bold; }
+    .container { padding: 15px; max-width: 600px; margin: auto; }
+    button { background-color: #ffb347; border: none; padding: 10px 20px; margin: 5px; font-size: 16px; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #ff9800; }
+    .result { margin-top: 20px; padding: 10px; border: 1px solid #ddd; background-color: #fff; border-radius: 5px; }
+    .debug-log { position: fixed; bottom: 5px; right: 5px; background: rgba(0,0,0,0.7); color: white; font-size: 12px; padding: 5px; border-radius: 5px; max-width: 200px; }
+</style>
+</head>
+<body>
+<header>签文非注定，仅供参考，命运未定，信念自身。</header>
+<div class="container">
+    <h2>摇签</h2>
+    <p>默想所求后点击按钮摇签</p>
+    <button id="drawBtn">摇签</button>
+    <div id="result" class="result"></div>
+</div>
+<div class="debug-log" id="debugLog">调试日志：</div>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    const log = (msg) => {
+        const logBox = document.getElementById('debugLog');
+        logBox.innerHTML += "<br>" + msg;
+    };
+    log("页面已加载");
+    
+    const fortunes = [
+        { poem: "春风得意马蹄疾", advice: "今天状态不错，适合推进进度", value: 3 },
+        { poem: "风雨不改前行路", advice: "保持节奏，别被小事绊住", value: 1 },
+        { poem: "云遮月色难见光", advice: "耐心等待时机，不必急", value: 0 },
+        { poem: "秋水共长天一色", advice: "静下心，先整理思绪", value: 2 },
+        { poem: "落花流水春去也", advice: "接受变化，顺势而为", value: -1 }
+    ];
+
+    document.getElementById('drawBtn').addEventListener('click', function(){
+        log("摇签按钮被点击");
+        const pick = fortunes[Math.floor(Math.random() * fortunes.length)];
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = `
+            <h3>签诗：</h3>
+            <p>${pick.poem}</p>
+            <h3>建议：</h3>
+            <p>${pick.advice}</p>
+            <p>命运值变化：${pick.value >= 0 ? '+' : ''}${pick.value}</p>
+            <button onclick="alert('你选择认了')">我认了</button>
+            <button onclick="alert('需要订阅才能重签')">我重签</button>
+        `;
+    });
+});
+</script>
+</body>
+</html>
